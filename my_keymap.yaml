@@ -1,0 +1,29 @@
+# For visualization I use https://keymap-drawer.streamlit.app/
+#
+layout:
+  qmk_keyboard: corne_rotated
+  qmk_layout: LAYOUT_split_3x6_3
+combos:
+  - { p: [19, 20], k: "Esc", l: ["0"] }
+layers:
+  "0":
+    - ["Tab", { t: "Q", h: "Й" }, { t: "W", h: "Ц" }, { t: "E", h: "У" }, { t: "R", h: "К" }, { t: "T", h: "Е" }, { t: "Y", h: "Н" }, { t: "U", h: "Г" }, { t: "I", h: "Ш" }, { t: "O", h: "Щ" }, { t: "P", h: "З" }, "Bspace"]
+    - ["LCtrl",  { t: "A", h: "Ф" }, { t: "S", h: "Ы" }, { t: "D", h: "В" }, { t: "F", h: "А" }, { t: "G", h: "П" }, { t: "H", h: "Р" }, { t: "J", h: "О" }, { t: "K", h: "Л" }, { t: "L", h: "Д" }, { t: ";", s: ":", h: "Ж" }, { t: "'", s: "\"", h: "Э" }]
+    - ["Esc",  { t: "Z", h: "Я" }, { t: "X", h: "Ч" }, { t: "C", h: "С" }, { t: "V", h: "М" }, { t: "B", h: "И" }, { t: "N", h: "Т" }, { t: "M", h: "Ь" }, { t: ",", s: "<", h: "Б" }, { t: ".", s: ">", h: "Ю" }, { t: "/", s: "?", h: ".\n," }, "\\"]
+    - ["LGui", { h: "1" }, { t: "Space", h: "LShift" }, { t: "Enter", h: "LShift" }, { h: "2" }, "LAlt"]
+  "1":
+    - ["Tab", null, { t: "7", s: "&"}, { t: "8", s: "*"}, { t: "9", s: "("}, { t: "-", s: "_"}, "{", "}", "(", ")", null, "Bspace"]
+    - ["LCtrl", null, { t: "4", s: "$"}, { t: "5", s: "%"}, { t: "6", s: "^"}, { t: "=", s: "+"}, "Left", "Down", "Up", "Right", ";", "'"]
+    - ["Esc", { t: "0", s: ")"}, { t: "1", s: "!"}, { t: "2", s: "@"}, { t: "3", s: "#"}, null, null, null, null, null, null, null]
+    - ["LGui", {type: held}, { t: "Space", h: "LShift" }, { t: "Enter", h: "LShift" }, { h: "3" }, "LAlt"]
+  "2":
+    - ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"]
+    - ["LCtrl", null, null, null, null, null, "Left", "Down", "Up", "Right", null, null]
+    - ["Esc", null, null, null, null, null, null, null, null, null, null, null]
+    - ["LGui", { h: "3" }, { t: "Space", h: "LShift" }, { t: "Enter", h: "LShift" }, {type: held}, "LAlt"]
+  "3":
+    - ["BR down", "BR up", null, null, null, null, "Media prev", "Media play", "Media next", "Vol mute", "Vol down", "Vol up"]
+    - [null, null, null, null, null,  null, "Left", "Down", "Up", "Right", null, null]
+    - [null, null, null, null, null, null, null, null, null, null, null, "QK reset"]
+    - ["LGui", {type: held}, { t: "Space", h: "LShift" }, { t: "Enter", h: "LShift" }, {type: held}, "LAlt"]
+
