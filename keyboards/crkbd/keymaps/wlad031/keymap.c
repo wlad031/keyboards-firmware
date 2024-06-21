@@ -18,39 +18,144 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 
-/*enum {*/
-/*    TD_M_RBRC, // for russian layout, Ь->Ъ, M->]*/
-/*    TD_N_LBRC, // for russian laout, Т->Х, N->[*/
-/*};*/
-/*tap_dance_action_t tap_dance_actions[] = {*/
-/*    [TD_M_RBRC] = ACTION_TAP_DANCE_DOUBLE(KC_M, KC_RBRC),*/
-/*    [TD_N_LBRC] = ACTION_TAP_DANCE_DOUBLE(KC_N, KC_LBRC),*/
-/*};*/
-/**/
-/*uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {*/
-/*    switch (keycode) {*/
-/*        case TD(TD_N_LBRC):*/
-/*        case TD(TD_M_RBRC):*/
-/*            return 200;*/
-/*        default:*/
-/*            return TAPPING_TERM;*/
-/*    }*/
-/*}*/
-
 const uint16_t PROGMEM CMB_J_K[] = { KC_J, KC_K, COMBO_END };
 combo_t key_combos[] = {
     COMBO(CMB_J_K, KC_ESC),
 };
-/*const key_override_t delete_key_override = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);*/
-/*const key_override_t **key_overrides = (const key_override_t *[]){*/
-/*	&delete_key_override,*/
-/*	NULL // Null terminate the array of overrides!*/
-/*};*/
+
+enum td_keycodes {
+    TD_LGUI
+};
+typedef enum {
+  SINGLE_TAP = 1,
+  SINGLE_HOLD = 2,
+  DOUBLE_TAP = 3,
+  DOUBLE_HOLD = 4,
+  DOUBLE_SINGLE_TAP = 5, //send two single taps
+  TRIPLE_TAP = 6,
+  TRIPLE_HOLD = 7
+} td_state_t;
+static td_state_t td_state;
+int cur_dance(tap_dance_state_t *state);
+void td_lgui_finished(tap_dance_state_t *state, void *user_data);
+void td_lgui_reset(tap_dance_state_t *state, void *user_data);
+
+#define L_BASE 0
+#define L_NUM 1
+#define L_SPEC 2
+#define L_FUN 3
+
+/* Return an integer that corresponds to what kind of tap dance should be executed.
+ *
+ * How to figure out tap dance state: interrupted and pressed.
+ *
+ * Interrupted: If the state of a dance dance is "interrupted", that means that another key has been hit
+ *  under the tapping term. This is typically indicitive that you are trying to "tap" the key.
+ *
+ * Pressed: Whether or not the key is still being pressed. If this value is true, that means the tapping term
+ *  has ended, but the key is still being pressed down. This generally means the key is being "held".
+ *
+ * One thing that is currenlty not possible with qmk software in regards to tap dance is to mimic the "permissive hold"
+ *  feature. In general, advanced tap dances do not work well if they are used with commonly typed letters.
+ *  For example "A". Tap dances are best used on non-letter keys that are not hit while typing letters.
+ *
+ * Good places to put an advanced tap dance:
+ *  z,q,x,j,k,v,b, any function key, home/end, comma, semi-colon
+ *
+ * Criteria for "good placement" of a tap dance key:
+ *  Not a key that is hit frequently in a sentence
+ *  Not a key that is used frequently to double tap, for example 'tab' is often double tapped in a terminal, or
+ *    in a web form. So 'tab' would be a poor choice for a tap dance.
+ *  Letters used in common words as a double. For example 'p' in 'pepper'. If a tap dance function existed on the
+ *    letter 'p', the word 'pepper' would be quite frustating to type.
+ *
+ * For the third point, there does exist the 'DOUBLE_SINGLE_TAP', however this is not fully tested
+ *
+ */
+int cur_dance(tap_dance_state_t *state) {
+
+  if (state->count == 1) {
+         if (state->interrupted) return SINGLE_HOLD;
+    else if (state->pressed)     return SINGLE_HOLD;
+    else                         return SINGLE_TAP;
+  }
+
+  if (state->count == 2) {
+         if (state->interrupted) return DOUBLE_HOLD;
+    else if (state->pressed)     return DOUBLE_HOLD;
+    else                         return DOUBLE_TAP;
+  }
+
+  if (state->count == 3) {
+         if (state->interrupted) return TRIPLE_HOLD;
+    else if (state->pressed)     return TRIPLE_HOLD;
+    else                         return TRIPLE_TAP;
+  }
+
+  //magic number. At some point this method will expand to work for more presses
+  return 8;
+}
+
+void td_lgui_finished(tap_dance_state_t *state, void *user_data) {
+  td_state = cur_dance(state);
+  switch (td_state) {
+    case SINGLE_HOLD:
+      break;
+    case DOUBLE_HOLD:
+      if (!layer_state_is(L_NUM)) {
+        layer_on(L_NUM);
+      }
+      break;
+    case TRIPLE_HOLD:
+      if (!layer_state_is(L_SPEC)) {
+        layer_on(L_SPEC);
+      }
+      break;
+    default:
+      break;
+  }
+  register_mods(MOD_BIT(KC_LGUI));
+}
+
+void td_lgui_reset(tap_dance_state_t *state, void *user_data) {
+  switch (td_state) {
+    case SINGLE_HOLD:
+      break;
+    case DOUBLE_HOLD:
+      if (layer_state_is(L_NUM)) {
+        layer_off(L_NUM);
+      }
+      unregister_mods(MOD_BIT(KC_LGUI));
+      break;
+    case TRIPLE_HOLD:
+      if (layer_state_is(L_SPEC)) {
+        layer_off(L_SPEC);
+      }
+      break;
+    default:
+      break;
+  }
+  unregister_mods(MOD_BIT(KC_LGUI));
+}
+
+//Associate our tap dance key with its functionality
+tap_dance_action_t tap_dance_actions[] = {
+  [TD_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_lgui_finished, td_lgui_reset)
+};
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case TD(TD_LGUI):
+            return 200;
+        default:
+            return TAPPING_TERM;
+    }
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   // BASE
-    [0] = LAYOUT_split_3x6_3(
+    [L_BASE] = LAYOUT_split_3x6_3(
   //,--------------------------------------------------------------.                    ,-----------------------------------------------------.
                 KC_ESC,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -58,12 +163,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                KC_LALT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_BSLS,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                 KC_LGUI,    MO(1),  LSFT_T(KC_SPC),                        LSFT_T(KC_ENT),   MO(2),  KC_MEH
+                             TD(TD_LGUI),   MO(1),   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT),   MO(2),  KC_MEH
 
   ),
 
   // NUMBERS
-    [1] = LAYOUT_split_3x6_3(
+    [L_NUM] = LAYOUT_split_3x6_3(
   //,--------------------------------------------------------------.                    ,-----------------------------------------------------.
                 KC_ESC,  KC_GRV,   KC_P7,   KC_P8,   KC_P9, KC_PMNS,                      KC_LBRC, KC_RBRC, KC_LPRN, KC_RPRN, XXXXXXX, KC_BSPC,
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -75,7 +180,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   // SPECIAL CHARACTERS
-    [2] = LAYOUT_split_3x6_3(
+    [L_SPEC] = LAYOUT_split_3x6_3(
   //,--------------------------------------------------------------.                    ,-----------------------------------------------------.
                 KC_ESC, KC_TILD, KC_AMPR, KC_ASTR, XXXXXXX, KC_UNDS,                      KC_LCBR, KC_RCBR,   KC_LT,   KC_GT, XXXXXXX, KC_BSPC,
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -87,7 +192,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   // FUNCTION + MEDIA
-    [3] = LAYOUT_split_3x6_3(
+    [L_FUN] = LAYOUT_split_3x6_3(
   //,--------------------------------------------------------------.                    ,-----------------------------------------------------.
                  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                        KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12,
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -98,3 +203,4 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  _______, _______,           KC_SPC,                                KC_ENT, _______, _______
   )
 };
+
