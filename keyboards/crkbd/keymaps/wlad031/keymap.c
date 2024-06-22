@@ -45,33 +45,6 @@ void td_lgui_reset(tap_dance_state_t *state, void *user_data);
 #define L_SPEC 2
 #define L_FUN 3
 
-/* Return an integer that corresponds to what kind of tap dance should be executed.
- *
- * How to figure out tap dance state: interrupted and pressed.
- *
- * Interrupted: If the state of a dance dance is "interrupted", that means that another key has been hit
- *  under the tapping term. This is typically indicitive that you are trying to "tap" the key.
- *
- * Pressed: Whether or not the key is still being pressed. If this value is true, that means the tapping term
- *  has ended, but the key is still being pressed down. This generally means the key is being "held".
- *
- * One thing that is currenlty not possible with qmk software in regards to tap dance is to mimic the "permissive hold"
- *  feature. In general, advanced tap dances do not work well if they are used with commonly typed letters.
- *  For example "A". Tap dances are best used on non-letter keys that are not hit while typing letters.
- *
- * Good places to put an advanced tap dance:
- *  z,q,x,j,k,v,b, any function key, home/end, comma, semi-colon
- *
- * Criteria for "good placement" of a tap dance key:
- *  Not a key that is hit frequently in a sentence
- *  Not a key that is used frequently to double tap, for example 'tab' is often double tapped in a terminal, or
- *    in a web form. So 'tab' would be a poor choice for a tap dance.
- *  Letters used in common words as a double. For example 'p' in 'pepper'. If a tap dance function existed on the
- *    letter 'p', the word 'pepper' would be quite frustating to type.
- *
- * For the third point, there does exist the 'DOUBLE_SINGLE_TAP', however this is not fully tested
- *
- */
 int cur_dance(tap_dance_state_t *state) {
 
   if (state->count == 1) {
@@ -146,7 +119,13 @@ tap_dance_action_t tap_dance_actions[] = {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case TD(TD_LGUI):
+            return 175;
+        case LCTL_T(KC_TAB):
             return 200;
+        case LSFT_T(KC_SPC):
+            return 300;
+        case LSFT_T(KC_ENT):
+            return 300;
         default:
             return TAPPING_TERM;
     }
@@ -163,7 +142,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                KC_LALT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_BSLS,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                             TD(TD_LGUI),   MO(1),   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT),   MO(2),  KC_MEH
+                          MO(1),      TD(TD_LGUI),   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT),   MO(2),  KC_MEH
 
   ),
 
@@ -176,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                KC_LALT,   KC_P0,   KC_P1,   KC_P2,   KC_P3, XXXXXXX,                      KC_COMM,  KC_DOT, KC_COMM,  KC_DOT, KC_SLSH, KC_BSLS,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                 KC_LGUI, _______,           KC_SPC,                        LSFT_T(KC_ENT),   MO(3),  KC_MEH
+                       _______,           KC_LGUI,           KC_SPC,                        LSFT_T(KC_ENT),   MO(3),  KC_MEH
   ),
 
   // SPECIAL CHARACTERS
@@ -188,7 +167,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                KC_LALT, XXXXXXX, KC_EXLM,   KC_AT, KC_HASH, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_QUES, KC_PIPE,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                 KC_LGUI,   MO(3),   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT), _______,  KC_MEH
+                          MO(3),          KC_LGUI,   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT), _______,  KC_MEH
   ),
 
   // FUNCTION + MEDIA
