@@ -121,7 +121,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case TD(TD_LGUI):
             return 175;
         case LCTL_T(KC_TAB):
-            return 200;
+            return 300;
         case LSFT_T(KC_SPC):
             return 300;
         case LSFT_T(KC_ENT):
@@ -142,7 +142,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                KC_LALT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_BSLS,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                          MO(1),      TD(TD_LGUI),   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT),   MO(2),  KC_MEH
+                         KC_MEH,          KC_LGUI,   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT),       MO(L_NUM),        MO(L_SPEC)
 
   ),
 
@@ -155,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                KC_LALT,   KC_P0,   KC_P1,   KC_P2,   KC_P3, XXXXXXX,                      KC_COMM,  KC_DOT, KC_COMM,  KC_DOT, KC_SLSH, KC_BSLS,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                       _______,           KC_LGUI,           KC_SPC,                        LSFT_T(KC_ENT),   MO(3),  KC_MEH
+                         KC_MEH,          KC_LGUI,   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT),          _______,          XXXXXXX
   ),
 
   // SPECIAL CHARACTERS
@@ -167,7 +167,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                KC_LALT, XXXXXXX, KC_EXLM,   KC_AT, KC_HASH, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_QUES, KC_PIPE,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                          MO(3),          KC_LGUI,   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT), _______,  KC_MEH
+                      MO(L_FUN),          KC_LGUI,   LSFT_T(KC_SPC),                        LSFT_T(KC_ENT),          XXXXXXX,          _______
   ),
 
   // FUNCTION + MEDIA
@@ -177,9 +177,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BRIU,                      XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-               XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BRID,                      XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, XXXXXXX, XXXXXXX,
+               KC_LALT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BRID,                      XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, XXXXXXX, KC_LSFT,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                 _______, _______,           KC_SPC,                                KC_ENT, _______, _______
+                        _______,          KC_LGUI,          XXXXXXX,                               XXXXXXX,          XXXXXXX,          _______
   )
 };
 
