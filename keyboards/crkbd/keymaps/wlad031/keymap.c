@@ -79,11 +79,13 @@ void td_lgui_finished(tap_dance_state_t *state, void *user_data) {
         layer_on(L_NUM);
       }
       break;
+            /*
     case TRIPLE_HOLD:
       if (!layer_state_is(L_SPEC)) {
         layer_on(L_SPEC);
       }
       break;
+      */
     default:
       break;
   }
@@ -100,11 +102,13 @@ void td_lgui_reset(tap_dance_state_t *state, void *user_data) {
       }
       unregister_mods(MOD_BIT(KC_LGUI));
       break;
+            /*
     case TRIPLE_HOLD:
       if (layer_state_is(L_SPEC)) {
         layer_off(L_SPEC);
       }
       break;
+      */
     default:
       break;
   }
@@ -151,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,--------------------------------------------------------------.                    ,-----------------------------------------------------.
                 KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-                KC_TAB,  KC_GRV, XXXXXXX, KC_MINS,  KC_EQL, XXXXXXX,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_SCLN, KC_QUOT,
+                KC_TAB,  KC_GRV, XXXXXXX, KC_MINS,  KC_EQL, XXXXXXX,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, KC_LBRC, KC_RBRC,
   //|-----------------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
                KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, KC_COMM,  KC_DOT, KC_SLSH, KC_BSLS,
   //|-----------------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
