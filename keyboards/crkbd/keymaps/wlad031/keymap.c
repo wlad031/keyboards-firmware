@@ -18,118 +18,109 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 
-const uint16_t PROGMEM CMB_J_K[] = { KC_J, KC_K, COMBO_END };
-combo_t key_combos[] = {
-    COMBO(CMB_J_K, KC_ESC),
-};
-
-enum td_keycodes {
-    TD_LGUI
-};
-typedef enum {
-  SINGLE_TAP = 1,
-  SINGLE_HOLD = 2,
-  DOUBLE_TAP = 3,
-  DOUBLE_HOLD = 4,
-  DOUBLE_SINGLE_TAP = 5, //send two single taps
-  TRIPLE_TAP = 6,
-  TRIPLE_HOLD = 7
-} td_state_t;
-static td_state_t td_state;
-int cur_dance(tap_dance_state_t *state);
-void td_lgui_finished(tap_dance_state_t *state, void *user_data);
-void td_lgui_reset(tap_dance_state_t *state, void *user_data);
+/*enum td_keycodes {*/
+/*    TD_LGUI*/
+/*};*/
+/*typedef enum {*/
+/*  SINGLE_TAP = 1,*/
+/*  SINGLE_HOLD = 2,*/
+/*  DOUBLE_TAP = 3,*/
+/*  DOUBLE_HOLD = 4,*/
+/*  DOUBLE_SINGLE_TAP = 5, //send two single taps*/
+/*  TRIPLE_TAP = 6,*/
+/*  TRIPLE_HOLD = 7*/
+/*} td_state_t;*/
+/*static td_state_t td_state;*/
+/*int cur_dance(tap_dance_state_t *state);*/
+/*void td_lgui_finished(tap_dance_state_t *state, void *user_data);*/
+/*void td_lgui_reset(tap_dance_state_t *state, void *user_data);*/
 
 #define L_BASE 0
 #define L_NUM 1
 /*#define L_SPEC 2*/
 #define L_FUN 2
 
-int cur_dance(tap_dance_state_t *state) {
-
-  if (state->count == 1) {
-         if (state->interrupted) return SINGLE_HOLD;
-    else if (state->pressed)     return SINGLE_HOLD;
-    else                         return SINGLE_TAP;
-  }
-
-  if (state->count == 2) {
-         if (state->interrupted) return DOUBLE_HOLD;
-    else if (state->pressed)     return DOUBLE_HOLD;
-    else                         return DOUBLE_TAP;
-  }
-
-  if (state->count == 3) {
-         if (state->interrupted) return TRIPLE_HOLD;
-    else if (state->pressed)     return TRIPLE_HOLD;
-    else                         return TRIPLE_TAP;
-  }
-
-  //magic number. At some point this method will expand to work for more presses
-  return 8;
-}
-
-void td_lgui_finished(tap_dance_state_t *state, void *user_data) {
-  td_state = cur_dance(state);
-  switch (td_state) {
-    case SINGLE_HOLD:
-      break;
-    case DOUBLE_HOLD:
-      if (!layer_state_is(L_NUM)) {
-        layer_on(L_NUM);
-      }
-      break;
-            /*
-    case TRIPLE_HOLD:
-      if (!layer_state_is(L_SPEC)) {
-        layer_on(L_SPEC);
-      }
-      break;
-      */
-    default:
-      break;
-  }
-  register_mods(MOD_BIT(KC_LGUI));
-}
-
-void td_lgui_reset(tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_HOLD:
-      break;
-    case DOUBLE_HOLD:
-      if (layer_state_is(L_NUM)) {
-        layer_off(L_NUM);
-      }
-      unregister_mods(MOD_BIT(KC_LGUI));
-      break;
-            /*
-    case TRIPLE_HOLD:
-      if (layer_state_is(L_SPEC)) {
-        layer_off(L_SPEC);
-      }
-      break;
-      */
-    default:
-      break;
-  }
-  unregister_mods(MOD_BIT(KC_LGUI));
-}
-
-//Associate our tap dance key with its functionality
-tap_dance_action_t tap_dance_actions[] = {
-  [TD_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_lgui_finished, td_lgui_reset)
-};
+/*int cur_dance(tap_dance_state_t *state) {*/
+/**/
+/*  if (state->count == 1) {*/
+/*         if (state->interrupted) return SINGLE_HOLD;*/
+/*    else if (state->pressed)     return SINGLE_HOLD;*/
+/*    else                         return SINGLE_TAP;*/
+/*  }*/
+/**/
+/*  if (state->count == 2) {*/
+/*         if (state->interrupted) return DOUBLE_HOLD;*/
+/*    else if (state->pressed)     return DOUBLE_HOLD;*/
+/*    else                         return DOUBLE_TAP;*/
+/*  }*/
+/**/
+/*  if (state->count == 3) {*/
+/*         if (state->interrupted) return TRIPLE_HOLD;*/
+/*    else if (state->pressed)     return TRIPLE_HOLD;*/
+/*    else                         return TRIPLE_TAP;*/
+/*  }*/
+/**/
+/*  //magic number. At some point this method will expand to work for more presses*/
+/*  return 8;*/
+/*}*/
+/**/
+/*void td_lgui_finished(tap_dance_state_t *state, void *user_data) {*/
+/*  td_state = cur_dance(state);*/
+/*  switch (td_state) {*/
+/*    case SINGLE_HOLD:*/
+/*      break;*/
+/*    case DOUBLE_HOLD:*/
+/*      if (!layer_state_is(L_NUM)) {*/
+/*        layer_on(L_NUM);*/
+/*      }*/
+/*      break;*/
+/*    case TRIPLE_HOLD:*/
+/*      if (!layer_state_is(L_SPEC)) {*/
+/*        layer_on(L_SPEC);*/
+/*      }*/
+/*      break;*/
+/*    default:*/
+/*      break;*/
+/*  }*/
+/*  register_mods(MOD_BIT(KC_LGUI));*/
+/*}*/
+/**/
+/*void td_lgui_reset(tap_dance_state_t *state, void *user_data) {*/
+/*  switch (td_state) {*/
+/*    case SINGLE_HOLD:*/
+/*      break;*/
+/*    case DOUBLE_HOLD:*/
+/*      if (layer_state_is(L_NUM)) {*/
+/*        layer_off(L_NUM);*/
+/*      }*/
+/*      unregister_mods(MOD_BIT(KC_LGUI));*/
+/*      break;*/
+/*    case TRIPLE_HOLD:*/
+/*      if (layer_state_is(L_SPEC)) {*/
+/*        layer_off(L_SPEC);*/
+/*      }*/
+/*      break;*/
+/*    default:*/
+/*      break;*/
+/*  }*/
+/*  unregister_mods(MOD_BIT(KC_LGUI));*/
+/*}*/
+/**/
+/*//Associate our tap dance key with its functionality*/
+/*tap_dance_action_t tap_dance_actions[] = {*/
+/*  [TD_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_lgui_finished, td_lgui_reset)*/
+/*};*/
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case TD(TD_LGUI):
-            return 175;
-        case LCTL_T(KC_TAB):
-            return 300;
+        /*case TD(TD_LGUI):*/
+        /*    return 175;*/
+        /*case LCTL_T(KC_TAB):*/
+        /*    return 300;*/
         case LSFT_T(KC_SPC):
-            return 300;
+            return 250;
         case LSFT_T(KC_ENT):
-            return 300;
+            return 200;
         default:
             return TAPPING_TERM;
     }
