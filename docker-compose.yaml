@@ -1,9 +1,10 @@
 name: qmk_firmware
+
 services:
-    qmk_cli:
-        tty: true
-        stdin_open: true
-        image: qmkfm/qmk_cli
-        volumes:
-          - ./qmk_firmware:/qmk_firmware
+  qmk_cli:
+    image: qmkfm/qmk_cli:latest
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./qmk_firmware:/qmk_firmware
 
